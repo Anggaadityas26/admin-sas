@@ -27,11 +27,11 @@
       <li><a href="?p=calon-karyawan"><i class="fa fa-user"></i> Calon Karyawan </a>
       </li>
       <li><a href="?p=schedule-test"><i class="fa fa-calendar"></i> Schedule-test </a>
+      </li><li><a href="?p=schedule-interview"><i class="fa fa-calendar-o"></i> Schedule-interview </a>
+        </li>
+      <li><a href="?p=soal-psikolog"><i class="fa fa-pencil-square-o"></i> Hasil Test & Interview </a>
       </li>
-      <li><a href="?p=soal-psikolog"><i class="fa fa-pencil-square-o"></i> Soal-psikolog </a>
-      </li>
-      <li><a href="?p=schedule-interview"><i class="fa fa-calendar-o"></i> Schedule-interview </a>
-      </li>
+
       <li><a href="?p=list-karyawan"><i class="fa fa-users"></i> List Karyawan </a>
       </li>
       <li><a href="?p=history-karyawan"><i class="fa fa-history"></i> History </a>

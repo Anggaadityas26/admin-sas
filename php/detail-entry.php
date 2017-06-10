@@ -78,8 +78,8 @@ $kd = $_GET['name'];
                     ':st'   => $statuss,
                     ':kode' => $kd
                     ));
-                print "<script>window.location='index.php?p=detail-request';</script>";
-                $_SESSION['kodePendaftaran'] = $row['no_pendaftaran'];
+                print "<script>window.location='?p=entry-data';</script>";
+
             }
 
         }

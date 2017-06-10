@@ -2,7 +2,7 @@
     date_default_timezone_set('Asia/Jakarta');
     $kd = $_GET['name'];
     $cek = new Admin();
-    $sql = "SELECT tb_temporary_perusahaan.no_pendaftaran, tb_temporary_perusahaan.kode_perusahaan, tb_temporary_perusahaan.nama_perusahaan, tb_temporary_perusahaan.kebutuhan, tb_temporary_perusahaan.create_date, tb_temporary_perusahaan.kode_pekerjaan, tb_jenis_pekerjaan.nama_pekerjaan FROM tb_temporary_perusahaan LEFT JOIN tb_jenis_pekerjaan ON tb_jenis_pekerjaan.kd_pekerjaan=tb_temporary_perusahaan.kode_pekerjaan WHERE tb_temporary_perusahaan.kode_perusahaan = :id";
+    $sql = "SELECT tb_temporary_perusahaan.no_pendaftaran, tb_temporary_perusahaan.kode_perusahaan, tb_temporary_perusahaan.nama_perusahaan, tb_temporary_perusahaan.kebutuhan, tb_temporary_perusahaan.create_date, tb_temporary_perusahaan.kode_pekerjaan, tb_jenis_pekerjaan.nama_pekerjaan FROM tb_temporary_perusahaan LEFT JOIN tb_jenis_pekerjaan ON tb_jenis_pekerjaan.kd_pekerjaan=tb_temporary_perusahaan.kode_pekerjaan WHERE tb_temporary_perusahaan.no_pendaftaran = :id";
     $stmt = $cek->runQuery($sql);
     $stmt->execute(array(
         ':id'   =>$kd));
@@ -23,23 +23,25 @@
     if (isset($_POST['addData'])) {
         # code...
         $no_kontrak = $_POST['txt_kontrak'];
+        $jmlh = $_POST['txt_total'];
         $kd_perusahaan = $_POST['txt_kode'];
         $deskripsi = $_POST['txt_deskripsi'];
         $tugas = $_POST['txt_tugas'];
         $tanggung = $_POST['txt_tanggung'];
         $penempatan = $_POST['txt_penempatan'];
         $total = $_POST['txt_nilai'];
-        
+        $req = $_POST['txt_req'];
         $admin = $_POST['txt_admin'];
         $start = $_POST['txt_start'];
         $ends = $_POST['txt_ends'];
 
-        $query = "INSERT INTO tb_kerjasama_perusahan (nomor_kontrak, kode_perusahaan, deskripsi, tugas, tanggung_jwb, penempatan, kontrak_start, kontrak_end, nilai_kontrak, kode_admin) VALUES (:kontrak, :kode, :deskripsi, :tgs, :tgjwb, :tmpt, :start, :ends, :nilai, :admin)";
+        $query = "INSERT INTO tb_job (nomor_kontrak) VALUES (:kontrak); INSERT INTO tb_kerjasama_perusahan (nomor_kontrak, kode_perusahaan, total_karyawan, deskripsi, tugas, tanggung_jwb, penempatan, kontrak_start, kontrak_end, nilai_kontrak, kode_admin) VALUES (:kontrak, :kode, :jmlh, :deskripsi, :tgs, :tgjwb, :tmpt, :start, :ends, :nilai, :admin)";
 
         $stmt = $cek->runQuery($query);
         $stmt->execute(array(
           ':kontrak'  =>$no_kontrak,
-          ':kode'     =>$kd_perusahaan,
+          ':kode'     =>$req,
+          ':jmlh'     =>$jmlh,
           ':deskripsi'=>$deskripsi,
           ':tgs'      =>$tugas,
           ':tgjwb'    =>$tanggung,
@@ -52,10 +54,11 @@
           # code...
           echo "data tidak masuk";
         } else{
-
-          $sql = "UPDATE tb_temporary_perusahaan SET status = '1'";
+            //bahwa nama perusahaan dengan request tersebut telah melalui tahap "entry detail Project"
+          $sql = "UPDATE tb_temporary_perusahaan SET status = '3' WHERE tb_temporary_perusahaan.no_pendaftaran = :id";
           $stmt = $cek->runQuery($sql);
-          $stmt->execute();
+            $stmt->execute(array(
+                ':id'   =>$kd));
 
           print "<script>window.location='index.php?p=select-karyawan&id=".$no_kontrak."';</script>";
           
@@ -92,7 +95,8 @@
               <input type="number" name="txt_total" class="form-control" placeholder="total karyawan" required>
               <input type="hidden" name="txt_kode" class="form-control" value="<?php echo $row['kode_perusahaan']; ?>">
               <input type="hidden" name="txt_kontrak" class="form-control" value="<?php echo $nomor; ?>">
-              <input type="hidden" name="txt_admin" class="form-control" value="<?php echo $admin_id; ?>">
+                <input type="hidden" name="txt_req" class="form-control" value="<?php echo $row['no_pendaftaran']; ?>">
+                <input type="hidden" name="txt_admin" class="form-control" value="<?php echo $admin_id; ?>">
             </div>
           </div>
 
@@ -100,21 +104,21 @@
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Deskripsi Pekerjaan <span class="required">*</span>
             </label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea  name="txt_deskripsi" class="form-control" rows="3" placeholder="tambahkan &quot;#&quot; untuk setiap deskripsi baru" required></textarea>
+              <textarea  name="txt_deskripsi" class="form-control" rows="3" placeholder="gambaran luas tentang deskripsi pekerjaan" required></textarea>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Tugas<span class="required">*</span>
             </label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea class="form-control" name="txt_tugas" rows="3" placeholder="tambahkan &quot;#&quot; untuk setiap tugas baru" required></textarea>
+              <textarea class="form-control" name="txt_tugas" rows="3" placeholder="gambaran luar tentang tugas pekerjaan" required></textarea>
             </div>
           </div>
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Tanggung Jawab<span class="required">*</span>
             </label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <textarea class="form-control" name="txt_tanggung" rows="3" placeholder="tambahkan &quot;#&quot; untuk setiap tanggung jawab baru" required></textarea>
+              <textarea class="form-control" name="txt_tanggung" rows="3" placeholder="gambaran luas tentang tanggung jawab pekerjaan" required></textarea>
             </div>
           </div>
           <div class="form-group">
@@ -126,7 +130,7 @@
           <div class="form-group">
             <label class="control-label col-md-3 col-sm-3 col-xs-12">Nilai Pekerjaan</label>
             <div class="col-md-9 col-sm-9 col-xs-12">
-              <input type="text" name="txt_nilai" class="form-control" placeholder="" required>
+              <input type="number" name="txt_nilai" class="form-control" placeholder="" required>
             </div>
           </div>
           <div class="form-group">
@@ -151,7 +155,6 @@
           <div class="ln_solid"></div>
           <div class="form-group">
             <div class="col-md-9 col-sm-9 col-xs-12 col-md-offset-3">
-              <button type="button" class="btn btn-primary">Cancel</button>
               <button type="reset" class="btn btn-primary">Reset</button>
               <button type="submit" name="addData" class="btn btn-success">Submit</button>
             </div>

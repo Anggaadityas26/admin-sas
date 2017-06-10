@@ -49,9 +49,6 @@ if($cekLogin->is_loggedin()!="")
 
   <body class="login">
 
-
-
- 
     <div>
       <a class="hiddenanchor" id="signup"></a>
       <a class="hiddenanchor" id="signin"></a>
